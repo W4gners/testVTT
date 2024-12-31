@@ -31,52 +31,52 @@ export default function App() {
     <DragDropProvider onFileDrop={handleSelecionarArquivo}>
       <div className="min-h-screen bg-neutral-900 text-white">
         {/* Header */}
-        <header className="border-b border-neutral-800">
-          <div className="max-w-7xl mx-auto px-4 py-4">
+        <header className="py-8">
+          <div className="max-w-7xl mx-auto px-4">
             <LogoMultimidia />
           </div>
         </header>
 
         {/* Navigation */}
-        <nav className="border-b border-neutral-800">
+        <nav className="mb-8">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex space-x-1">
+            <div className="flex justify-center gap-2">
               <button
                 onClick={() => setModo('srtToVtt')}
-                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
                   modo === 'srtToVtt'
-                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
                 SRT para VTT
               </button>
               <button
                 onClick={() => setModo('addNumbering')}
-                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
                   modo === 'addNumbering'
-                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
                 Numerar VTT
               </button>
               <button
                 onClick={() => setModo('audioToVtt')}
-                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
                   modo === 'audioToVtt'
-                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
                 Áudio para VTT
               </button>
               <button
                 onClick={() => setModo('videoToVtt')}
-                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
                   modo === 'videoToVtt'
-                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                    ? 'bg-orange-500 text-white'
+                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
                 Vídeo para VTT
