@@ -4,30 +4,21 @@ import { Preview } from './components/Preview';
 import { ActionButtons } from './components/ActionButtons';
 import { DragDropProvider } from './components/DragDropProvider';
 import { srtToVtt, addVttNumbering } from './utils/subtitleConverter';
-import { FileText, Settings } from 'lucide-react';
-import { ConversionType } from './components/ConversionType';
-import { ThemeToggle } from './components/ThemeToggle';
+import { LogoMultimidia } from './assets/logo_multimidia';
+
+type ConversionMode = 'srtToVtt' | 'addNumbering' | 'audioToVtt' | 'videoToVtt';
 
 export default function App() {
   const [conteudoEntrada, setConteudoEntrada] = useState('');
   const [conteudoSaida, setConteudoSaida] = useState('');
-  const [tipoConversao, setTipoConversao] = useState<'srtToVtt' | 'addNumbering'>('srtToVtt');
+  const [modo, setModo] = useState<ConversionMode>('srtToVtt');
 
   const handleSelecionarArquivo = (content: string) => {
     setConteudoEntrada(content);
-    const convertido = tipoConversao === 'srtToVtt' 
-      ? srtToVtt(content)
-      : addVttNumbering(content);
-    setConteudoSaida(convertido);
-  };
-
-  const handleMudarTipoConversao = (type: 'srtToVtt' | 'addNumbering') => {
-    setTipoConversao(type);
-    if (conteudoEntrada) {
-      const convertido = type === 'srtToVtt' 
-        ? srtToVtt(conteudoEntrada)
-        : addVttNumbering(conteudoEntrada);
-      setConteudoSaida(convertido);
+    if (modo === 'srtToVtt') {
+      setConteudoSaida(srtToVtt(content));
+    } else if (modo === 'addNumbering') {
+      setConteudoSaida(addVttNumbering(content));
     }
   };
 
@@ -39,73 +30,101 @@ export default function App() {
   return (
     <DragDropProvider onFileDrop={handleSelecionarArquivo}>
       <div className="min-h-screen bg-neutral-900 text-white">
-        <div className="max-w-7xl mx-auto p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Painel Lateral Esquerdo */}
-            <div className="lg:col-span-4">
-              <div className="bg-neutral-800 rounded-2xl p-6 space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold">Conversor de Legendas</h2>
-                    <p className="text-neutral-400 text-sm">Converta e edite legendas</p>
-                  </div>
-                </div>
+        {/* Header */}
+        <header className="border-b border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <LogoMultimidia />
+          </div>
+        </header>
 
-                <div className="space-y-4">
-                  <ConversionType 
-                    type={tipoConversao} 
-                    onChange={handleMudarTipoConversao} 
-                  />
-                  <FileUpload 
-                    onFileSelect={handleSelecionarArquivo}
-                    acceptedFormats={tipoConversao === 'srtToVtt' ? '.srt' : '.vtt'}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Área Principal */}
-            <div className="lg:col-span-8">
-              <div className="bg-neutral-800 rounded-2xl p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-medium">Visualização</h3>
-                  <div className="flex items-center space-x-4">
-                    <ThemeToggle />
-                    <button className="p-2 hover:bg-neutral-700 rounded-lg transition-colors">
-                      <Settings className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                {(conteudoEntrada || conteudoSaida) ? (
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <Preview 
-                        content={conteudoEntrada} 
-                        type="input" 
-                        label={tipoConversao === 'srtToVtt' ? 'Conteúdo SRT' : 'Conteúdo VTT'} 
-                      />
-                      <Preview 
-                        content={conteudoSaida} 
-                        type="output" 
-                        label="Resultado" 
-                      />
-                    </div>
-                    <ActionButtons vttContent={conteudoSaida} onReset={handleReiniciar} />
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-neutral-400">
-                    <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>Selecione um arquivo para começar a conversão</p>
-                  </div>
-                )}
-              </div>
+        {/* Navigation */}
+        <nav className="border-b border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex space-x-1">
+              <button
+                onClick={() => setModo('srtToVtt')}
+                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                  modo === 'srtToVtt'
+                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                SRT para VTT
+              </button>
+              <button
+                onClick={() => setModo('addNumbering')}
+                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                  modo === 'addNumbering'
+                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                Numerar VTT
+              </button>
+              <button
+                onClick={() => setModo('audioToVtt')}
+                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                  modo === 'audioToVtt'
+                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                Áudio para VTT
+              </button>
+              <button
+                onClick={() => setModo('videoToVtt')}
+                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                  modo === 'videoToVtt'
+                    ? 'bg-orange-500/20 text-orange-500 border-b-2 border-orange-500'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                }`}
+              >
+                Vídeo para VTT
+              </button>
             </div>
           </div>
-        </div>
+        </nav>
+
+        {/* Main Content */}
+        <main className="max-w-4xl mx-auto px-4 py-8">
+          <div className="space-y-8">
+            {/* Upload Area */}
+            <div className="bg-neutral-800 rounded-xl p-6">
+              <h2 className="text-lg font-bold text-center mb-6">
+                {modo === 'srtToVtt' && 'SRT para VTT'}
+                {modo === 'addNumbering' && 'Numerar VTT'}
+                {modo === 'audioToVtt' && 'Áudio para VTT'}
+                {modo === 'videoToVtt' && 'Vídeo para VTT'}
+              </h2>
+              {(modo === 'srtToVtt' || modo === 'addNumbering') && (
+                <FileUpload 
+                  onFileSelect={handleSelecionarArquivo}
+                  acceptedFormats={modo === 'srtToVtt' ? '.srt' : '.vtt'}
+                />
+              )}
+              {(modo === 'audioToVtt' || modo === 'videoToVtt') && (
+                <div className="text-center text-neutral-400">
+                  <p>Funcionalidade em desenvolvimento</p>
+                </div>
+              )}
+            </div>
+
+            {/* Results Area */}
+            {(conteudoEntrada || conteudoSaida) && (modo === 'srtToVtt' || modo === 'addNumbering') && (
+              <div className="bg-neutral-800 rounded-xl p-6">
+                <h3 className="text-lg font-bold mb-6 text-center">Resultado</h3>
+                <div className="space-y-6">
+                  <Preview 
+                    content={conteudoSaida} 
+                    type="output" 
+                    label="Resultado" 
+                  />
+                  <ActionButtons vttContent={conteudoSaida} onReset={handleReiniciar} />
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </DragDropProvider>
   );
