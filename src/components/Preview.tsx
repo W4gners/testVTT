@@ -9,9 +9,11 @@ interface PreviewProps {
 export function Preview({ content, type }: PreviewProps) {
   return (
     <div className="w-full">
-      <pre className="w-full p-4 bg-neutral-900 rounded-lg text-sm text-neutral-300 font-mono whitespace-pre-wrap break-words">
-        {content}
-      </pre>
+      <div className="w-full h-[240px] p-4 bg-neutral-900 rounded-lg text-sm text-neutral-300 font-mono overflow-y-auto">
+        <pre className="whitespace-pre-wrap break-words">
+          {content}
+        </pre>
+      </div>
     </div>
   );
 }
